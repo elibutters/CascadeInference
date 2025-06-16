@@ -10,9 +10,9 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/elibutters/cascadeinference",
     packages=find_packages(),
+    license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
