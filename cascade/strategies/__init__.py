@@ -5,12 +5,16 @@ between multiple LLM responses.
 
 from .base import AgreementStrategy
 from .strict import StrictAgreement
-from .semantic import SemanticAgreement
 from .remote_semantic import RemoteSemanticAgreement
 
 __all__ = [
     "AgreementStrategy",
     "StrictAgreement",
-    "SemanticAgreement",
     "RemoteSemanticAgreement",
-] 
+]
+
+try:
+    from .semantic import SemanticAgreement
+    __all__.append("SemanticAgreement")
+except ImportError:
+    pass 

@@ -22,6 +22,6 @@ setup(
     ],
     extras_require={
         "test": ["pytest", "pytest-asyncio", "python-dotenv"],
-        "semantic": ["fastembed"],
+        "semantic": ["fastembed", "scipy"],
     }
 ) 

@@ -12,6 +12,7 @@ ENV/
 env.bak/
 venv.bak/
 /dist/
+/test-install
 
 # Cython debug symbols
 cython_debug/
