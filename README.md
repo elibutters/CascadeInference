@@ -22,7 +22,7 @@ client_gemma = OpenAI(base_url="https://api.groq.com/openai/v1", api_key="...")
 # Level 2 Client (The powerful, expensive verifier)
 client_claude = Anthropic(api_key="sk-...")
 
-response = arbiter.chat.completions.create(
+response = cascade.chat.completions.create(
     # Provide the ensemble of fast clients
     level1_clients=[
         (client_phi3, "accounts/fireworks/models/phi-3-mini-128k-instruct"),
