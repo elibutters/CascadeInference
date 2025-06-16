@@ -39,8 +39,8 @@ async def _async_create(level1_clients, level2_client, agreement_strategy, messa
 
     level1_responses = await asyncio.gather(*tasks)
 
-    for response in level1_responses:
-        print(response.choices[0].message.content)
+    #for response in level1_responses:
+    #    print(response.choices[0].message.content)
 
     strategy_name = None
     strategy_params = {}
@@ -61,10 +61,10 @@ async def _async_create(level1_clients, level2_client, agreement_strategy, messa
     agreed = strategy.check_agreement(level1_responses)
 
     if agreed:
-        print("Level 1 clients agreed. Returning first response.")
+        #print("Level 1 clients agreed. Returning first response.")
         return level1_responses[0]
     else:
-        print("Level 1 clients disagreed. Escalating to Level 2 client.")
+        #print("Level 1 clients disagreed. Escalating to Level 2 client.")
         
         l2_client, l2_model = level2_client
 
@@ -77,5 +77,5 @@ async def _async_create(level1_clients, level2_client, agreement_strategy, messa
         
         level2_response = await asyncio.to_thread(call)
         
-        print("Received response from Level 2 client.")
+        #print("Received response from Level 2 client.")
         return level2_response 

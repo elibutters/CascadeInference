@@ -35,8 +35,6 @@ def test_live_create_completion():
         level2_client=level2_client,
         agreement_strategy={
             "name": "semantic",
-            "model_name": "sentence-transformers/all-MiniLM-L6-v2",
-            "threshold": 0.90
         },
         messages=messages,
     )

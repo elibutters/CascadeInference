@@ -41,8 +41,8 @@ class SemanticAgreement(AgreementStrategy):
             similarity = 1 - cosine(first_embedding, other_embedding)
             
             if similarity < self.threshold:
-                print(f"Semantic disagreement found (Similarity: {similarity:.4f} < Threshold: {self.threshold})")
+                #print(f"Semantic disagreement found (Similarity: {similarity:.4f} < Threshold: {self.threshold})")
                 return False
         
-        print(f"Semantic agreement found (All similarities >= {self.threshold})")
+        #print(f"Semantic agreement found (All similarities >= {self.threshold})")
         return True 

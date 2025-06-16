@@ -70,7 +70,11 @@ response = cascade.chat.completions.create(
 
 ### 2. Using a Different Embedding Model
 
-The default model is `sentence-transformers/all-MiniLM-L6-v2`, which is fast and lightweight. You can specify any other model compatible with the [FastEmbed](https://github.com/qdrant/fastembed) library.
+The default model is `sentence-transformers/all-MiniLM-L6-v2`, which is fast and lightweight. You can specify any other model compatible with the [**`FastEmbed`** library](https://qdrant.github.io/fastembed/examples/Supported_Models/).
+
+Some other excellent choices from the supported models list include:
+*   `nomic-ai/nomic-embed-text-v1.5`
+*   `sentence-transformers/paraphrase-multilingual-mpnet-base-v2`: For multilingual use cases.
 
 The library will automatically download and cache the new model on the first run.
 
@@ -79,8 +83,8 @@ response = cascade.chat.completions.create(
     # ... clients and messages ...
     agreement_strategy={
         "name": "semantic",
-        "model_name": "sentence-transformers/all-MiniLM-L6-v2", # A larger, more powerful model
-        "threshold": 0.99 # It's good practice to adjust the threshold for a new model
+        "model_name": "BAAI/bge-base-en-v1.5", # A larger, more powerful model
+        "threshold": 0.85 # It's good practice to adjust the threshold for a new model
     },
     # ...
 )
