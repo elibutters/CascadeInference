@@ -37,9 +37,7 @@ response = cascade.chat.completions.create(
     ],
     # Provide the single, powerful client for escalation
     level2_client=(client, "openai/gpt-4o"),
-    # Define the comparison strategy on the fly
     agreement_strategy="semantic", # or "strict"
-    # Pass in the standard OpenAI-style arguments
     messages=[
         {"role": "user", "content": "What are the key differences between HBM3e and GDDR7 memory?"}
     ]
