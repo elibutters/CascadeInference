@@ -7,9 +7,22 @@ STRATEGY_MAPPING = {
     "semantic": SemanticAgreement,
 }
 
-async def create(level1_clients, level2_client, agreement_strategy, messages, **kwargs):
+def create(level1_clients, level2_client, agreement_strategy, messages, **kwargs):
     """
-    This is the main function for Cascade Inference.
+    Synchronous wrapper for the core async cascade logic.
+    Provides a simple, blocking API similar to openai.create().
+    """
+    return asyncio.run(_async_create(
+        level1_clients, 
+        level2_client, 
+        agreement_strategy, 
+        messages, 
+        **kwargs
+    ))
+
+async def _async_create(level1_clients, level2_client, agreement_strategy, messages, **kwargs):
+    """
+    This is the main async function for Cascade Inference.
     It performs level 1 inference calls asynchronously and prepares for comparison.
     """
     
@@ -28,11 +41,22 @@ async def create(level1_clients, level2_client, agreement_strategy, messages, **
     print(level1_responses[0].choices[0].message.content)
     print(level1_responses[1].choices[0].message.content)
 
-    strategy_class = STRATEGY_MAPPING.get(agreement_strategy)
+    strategy_name = None
+    strategy_params = {}
+
+    if isinstance(agreement_strategy, str):
+        strategy_name = agreement_strategy
+    elif isinstance(agreement_strategy, dict):
+        strategy_name = agreement_strategy.get("name")
+        strategy_params = {k: v for k, v in agreement_strategy.items() if k != "name"}
+    else:
+        raise TypeError("agreement_strategy must be a string or a dictionary.")
+
+    strategy_class = STRATEGY_MAPPING.get(strategy_name)
     if not strategy_class:
-        raise ValueError(f"Unknown agreement strategy: {agreement_strategy}")
+        raise ValueError(f"Unknown agreement strategy: {strategy_name}")
     
-    strategy = strategy_class()
+    strategy = strategy_class(**strategy_params)
     agreed = strategy.check_agreement(level1_responses)
 
     if agreed:

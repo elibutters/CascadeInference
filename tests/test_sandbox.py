@@ -1,15 +1,15 @@
-import pytest, os, openai
+import pytest
+import os
+import openai
 import cascade
 from dotenv import load_dotenv
 
 load_dotenv()
 
-pytestmark = pytest.mark.asyncio
-
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 
 @pytest.mark.skipif(not OPENROUTER_API_KEY, reason="OPENROUTER_API_KEY not set")
-async def test_live_create_completion():
+def test_live_create_completion():
     """
     Tests the create completion function with a live OpenRouter endpoint.
     This is a basic sandbox test to ensure the async calls and aggregation work.
@@ -19,6 +19,7 @@ async def test_live_create_completion():
         api_key=OPENROUTER_API_KEY,
     )
 
+    # Use two cheap models from OpenRouter for the Level 1 ensemble
     level1_clients = [
         (client, "meta-llama/llama-3.1-8b-instruct"),
         (client, "meta-llama/llama-3.2-3b-instruct")
@@ -30,7 +31,7 @@ async def test_live_create_completion():
         {"role": "user", "content": "What is the capital of France?"}
     ]
 
-    response = await cascade.chat.completions.create(
+    response = cascade.chat.completions.create(
         level1_clients=level1_clients,
         level2_client=level2_client,
         agreement_strategy="semantic",
