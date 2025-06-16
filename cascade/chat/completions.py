@@ -1,10 +1,11 @@
 import asyncio
 import functools
-from cascade.strategies import StrictAgreement, SemanticAgreement
+from cascade.strategies import StrictAgreement, SemanticAgreement, RemoteSemanticAgreement
 
 STRATEGY_MAPPING = {
     "strict": StrictAgreement,
     "semantic": SemanticAgreement,
+    "remote_semantic": RemoteSemanticAgreement,
 }
 
 def create(level1_clients, level2_client, agreement_strategy, messages, **kwargs):
@@ -38,8 +39,8 @@ async def _async_create(level1_clients, level2_client, agreement_strategy, messa
 
     level1_responses = await asyncio.gather(*tasks)
 
-    print(level1_responses[0].choices[0].message.content)
-    print(level1_responses[1].choices[0].message.content)
+    for response in level1_responses:
+        print(response.choices[0].message.content)
 
     strategy_name = None
     strategy_params = {}

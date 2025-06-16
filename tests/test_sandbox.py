@@ -19,7 +19,6 @@ def test_live_create_completion():
         api_key=OPENROUTER_API_KEY,
     )
 
-    # Use two cheap models from OpenRouter for the Level 1 ensemble
     level1_clients = [
         (client, "meta-llama/llama-3.1-8b-instruct"),
         (client, "meta-llama/llama-3.2-3b-instruct")
@@ -28,13 +27,17 @@ def test_live_create_completion():
     level2_client = (client, "openai/gpt-4o")
 
     messages = [
-        {"role": "user", "content": "What is the capital of France?"}
+        {"role": "user", "content": "Write a hello world program in python"}
     ]
 
     response = cascade.chat.completions.create(
         level1_clients=level1_clients,
         level2_client=level2_client,
-        agreement_strategy="semantic",
+        agreement_strategy={
+            "name": "semantic",
+            "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+            "threshold": 0.90
+        },
         messages=messages,
     )
 

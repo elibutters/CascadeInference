@@ -18,6 +18,7 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         "openai",
+        "requests",
     ],
     extras_require={
         "test": ["pytest", "pytest-asyncio", "python-dotenv"],
