@@ -1,0 +1,22 @@
+from setuptools import setup, find_packages
+
+setup(
+    name="cascade-inference",
+    version="0.0.1",
+    author="Eli Butters",
+    author_email="elibutters@outlook.com",
+    description="Cascade based inference for large language models.",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/elibutters/cascadeinference",
+    packages=find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+    python_requires='>=3.6',
+    install_requires=[
+        "openai",
+    ],
+) 
