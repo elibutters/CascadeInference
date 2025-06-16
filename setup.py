@@ -20,6 +20,7 @@ setup(
         "openai",
     ],
     extras_require={
-        "test": ["pytest"],
+        "test": ["pytest", "pytest-asyncio", "python-dotenv"],
+        "semantic": ["fastembed"],
     }
 ) 

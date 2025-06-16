@@ -1,35 +1,56 @@
-def create(level1_clients, level2_client, agreement_strategy, messages, **kwargs):
+import asyncio
+import functools
+from cascade.strategies import StrictAgreement, SemanticAgreement
+
+STRATEGY_MAPPING = {
+    "strict": StrictAgreement,
+    "semantic": SemanticAgreement,
+}
+
+async def create(level1_clients, level2_client, agreement_strategy, messages, **kwargs):
     """
     This is the main function for Cascade Inference.
-    It will eventually handle the cascade based inference.
+    It performs level 1 inference calls asynchronously and prepares for comparison.
     """
-    print("Welcome to Cascade Inference!")
-    print("This is where the magic will happen.")
-
-    print("\n--- Arguments ---")
-    print(f"Level 1 Clients: {len(level1_clients)} clients")
-    for i, (client, model) in enumerate(level1_clients):
-        print(f"  - Client {i+1}: {client.__class__.__name__}, Model: {model}")
-
-    l2_client, l2_model = level2_client
-    print(f"Level 2 Client: {l2_client.__class__.__name__}, Model: {l2_model}")
-    print(f"Agreement Strategy: {agreement_strategy}")
-    print("Messages:")
-    for msg in messages:
-        print(f"  - {msg['role']}: {msg['content']}")
     
-    print("Other kwargs:", kwargs)
+    tasks = []
+    for client, model in level1_clients:
+        call = functools.partial(
+            client.chat.completions.create, 
+            model=model, 
+            messages=messages, 
+            **kwargs
+        )
+        tasks.append(asyncio.to_thread(call))
+
+    level1_responses = await asyncio.gather(*tasks)
+
+    print(level1_responses[0].choices[0].message.content)
+    print(level1_responses[1].choices[0].message.content)
+
+    strategy_class = STRATEGY_MAPPING.get(agreement_strategy)
+    if not strategy_class:
+        raise ValueError(f"Unknown agreement strategy: {agreement_strategy}")
     
-    class MockMessage:
-        def __init__(self, content):
-            self.content = content
+    strategy = strategy_class()
+    agreed = strategy.check_agreement(level1_responses)
 
-    class MockChoice:
-        def __init__(self, content):
-            self.message = MockMessage(content)
+    if agreed:
+        print("Level 1 clients agreed. Returning first response.")
+        return level1_responses[0]
+    else:
+        print("Level 1 clients disagreed. Escalating to Level 2 client.")
+        
+        l2_client, l2_model = level2_client
 
-    class MockResponse:
-        def __init__(self, content):
-            self.choices = [MockChoice(content)]
-
-    return MockResponse("This is a mock response from Cascade Inference.") 
+        call = functools.partial(
+            l2_client.chat.completions.create,
+            model=l2_model,
+            messages=messages,
+            **kwargs
+        )
+        
+        level2_response = await asyncio.to_thread(call)
+        
+        print("Received response from Level 2 client.")
+        return level2_response 
