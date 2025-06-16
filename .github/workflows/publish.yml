@@ -10,7 +10,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: testpypi
+    environment: pypi
     
     steps:
     - uses: actions/checkout@v4
@@ -32,6 +32,12 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         # The OIDC token is used automatically, no password needed
-        skip-existing: true # Don't fail if the version already exists
+        skip-existing: true
+        
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        # The OIDC token is used automatically, no password needed
+        skip-existing: true
         # Use TestPyPI for this run. Remove the following line to publish to the real PyPI.
         repository-url: https://test.pypi.org/legacy/ 
