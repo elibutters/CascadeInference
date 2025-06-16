@@ -12,30 +12,22 @@ pip install cascade-inference
 
 ```python
 from openai import OpenAI
-from anthropic import Anthropic
-import cascade
+import cascade, os
 
-# Level 1 Clients (The cheap, fast ensemble)
-client_phi3 = OpenAI(base_url="https://api.fireworks.ai/inference/v1", api_key="...") 
-client_gemma = OpenAI(base_url="https://api.groq.com/openai/v1", api_key="...")
-
-# Level 2 Client (The powerful, expensive verifier)
-client_claude = Anthropic(api_key="sk-...")
+client = openai.OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.environ.get("OPENROUTER_API_KEY"),
+)
 
 response = cascade.chat.completions.create(
     # Provide the ensemble of fast clients
-    level1_clients=[
-        (client_phi3, "accounts/fireworks/models/phi-3-mini-128k-instruct"),
-        (client_gemma, "gemma-7b-it")
-    ],
-    
+    level1_clients = [
+        (client, "meta-llama/llama-3.1-8b-instruct"),
+        (client, "meta-llama/llama-3.2-3b-instruct")
+    ]
     # Provide the single, powerful client for escalation
-    level2_client=(client_claude, "claude-3-5-sonnet-20240620"),
-    
-    # Define the comparison strategy on the fly
+    level2_client = (client, "openai/gpt-4o")
     agreement_strategy="semantic", # or "strict"
-    
-    # Pass in the standard OpenAI-style arguments
     messages=[
         {"role": "user", "content": "What are the key differences between HBM3e and GDDR7 memory?"}
     ],

@@ -1,6 +1,4 @@
-import pytest
-import os
-import openai
+import pytest, os, openai
 import cascade
 from dotenv import load_dotenv
 
