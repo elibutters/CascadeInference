@@ -19,4 +19,7 @@ setup(
     install_requires=[
         "openai",
     ],
+    extras_require={
+        "test": ["pytest"],
+    }
 ) 

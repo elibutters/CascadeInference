@@ -11,3 +11,12 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Cython debug symbols
+cython_debug/
+
+# CascadeInference build
+cascade_inference.egg-info/
+
+# Pytest cache
+.pytest_cache/
