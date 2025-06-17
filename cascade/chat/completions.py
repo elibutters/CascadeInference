@@ -1,12 +1,19 @@
 import asyncio
 import functools
-from cascade.strategies import StrictAgreement, SemanticAgreement, RemoteSemanticAgreement
+from cascade.strategies import StrictAgreement, RemoteSemanticAgreement
 
+# Start with the strategies that are always available
 STRATEGY_MAPPING = {
     "strict": StrictAgreement,
-    "semantic": SemanticAgreement,
     "remote_semantic": RemoteSemanticAgreement,
 }
+
+# Conditionally add the optional strategy if its dependencies are installed
+try:
+    from cascade.strategies import SemanticAgreement
+    STRATEGY_MAPPING["semantic"] = SemanticAgreement
+except ImportError:
+    pass
 
 def create(level1_clients, level2_client, agreement_strategy, messages, **kwargs):
     """
